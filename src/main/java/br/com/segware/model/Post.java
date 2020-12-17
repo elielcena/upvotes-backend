@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter(AccessLevel.PUBLIC)
 @Entity
 @Table(name = "post")
-public class Post {
+public class Post extends Auditable {
 
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;

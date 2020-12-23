@@ -23,7 +23,7 @@ public class PostRepositoryTests {
 
 	@Test
 	public void save () {
-		Post post = new Post("Spring Boot Test", "Test Post Repository - Save Post", 1);
+		Post post = new Post(1L,"Spring Boot Test", "Test Post Repository - Save Post", "TESTE", 1);
 
 		repository.save(post);
 		
@@ -33,12 +33,13 @@ public class PostRepositoryTests {
 		assertThat(post.getId()).isNotNull();
 		assertThat(post.getTitulo()).isEqualTo("Spring Boot Test");
 		assertThat(post.getDescricao()).isEqualTo("Test Post Repository - Save Post");
+		assertThat(post.getUsername()).isEqualTo("TESTE");
 		assertThat(post.getUpVotes()).isEqualTo(1);
 	}
 	
 	@Test
 	public void updateUpVotes () {
-		Post post = new Post("Spring Boot Test", "Test Post Repository - Update Votes in Post", 1);
+		Post post = new Post(1L, "Spring Boot Test", "Test Post Repository - Update Votes in Post","TESTE", 1);
 
 		repository.save(post);
 		
@@ -51,6 +52,7 @@ public class PostRepositoryTests {
 		assertThat(post.getId()).isNotNull();
 		assertThat(post.getTitulo()).isEqualTo("Spring Boot Test");
 		assertThat(post.getDescricao()).isEqualTo("Test Post Repository - Update Votes in Post");
+		assertThat(post.getUsername()).isEqualTo("TESTE");
 		assertThat(post.getUpVotes()).isEqualTo(2);
 	}
 

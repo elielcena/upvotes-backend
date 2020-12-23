@@ -1,10 +1,13 @@
 package br.com.segware.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,17 +40,26 @@ public class Post extends Auditable {
 
 	@NotBlank
 	@NotNull
+	@Lob
 	private String descricao;
+	
+	@NotBlank
+	@NotNull
+	private String username;
 
 	@NotNull
 	@Column(name = "upvotes")
 	@JsonProperty("upvotes")
 	private Integer upVotes;
-
-	public Post(String titulo, String descricao, Integer upVotes) {
+	
+	public Post(Long id, String titulo, String descricao, String username, Integer upVotes, Date datagravacao, Date dataalteracao) {
+		this.id = id;
 		this.titulo = titulo;
 		this.descricao = descricao;
+		this.username = username;
 		this.upVotes = upVotes;
+		this.setDatagravacao(datagravacao);
+		this.setDataalteracao(dataalteracao);
 	}
 	
 	public Post(String descricao, Integer upVotes) {

@@ -3,7 +3,6 @@ package br.com.segware;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,7 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,31 +49,31 @@ public class PostControllerTests {
 
 	@Test
 	public void whenFindAllPostOrderByIdDescAndRerifyData_thenReturnStatusCode() throws Exception {
-		List<Post> userList =  Arrays.asList(new Post(1L, "Spring Boot Test", "Test Post Repository - Save Post", 1), new Post(2L, "Spring Boot Test 2", "Test Post Repository 2 - Save Post 2", 2));
+		List<Post> userList =  Arrays.asList(new Post(2L, "Spring Boot Test 2", "Test Post Repository 2 - Save Post 2", "TESTE 2", 2, new Date(), new Date()), new Post(1L, "Spring Boot Test", "Test Post Repository - Save Post", "TESTE", 1, new Date(), new Date()));
+		String now = LocalDateTime.now().getYear() + "-" + LocalDateTime.now().getMonth() + "-" + LocalDateTime.now().getDayOfMonth();
+		when(repository.findByData(now)).thenReturn(userList);
 
-		when(repository.findAll(Sort.by(Sort.Direction.DESC, "id"))).thenReturn(userList);
-
-		mockMvc.perform(get(URI_POST))
+		mockMvc.perform(get(URI_POST + "?data=" + now))
 		.andExpect(status().isOk())
 		.andDo(print())
-		.andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(2))))
+		.andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(2))))	
 		
-		.andExpect(jsonPath("$[0].id", is(1)))
-		.andExpect(jsonPath("$[0].titulo", is("Spring Boot Test")))
-		.andExpect(jsonPath("$[0].descricao", is("Test Post Repository - Save Post")))
-		.andExpect(jsonPath("$[0].upvotes", is(1)))
+		.andExpect(jsonPath("$[0].id", is(2)))
+		.andExpect(jsonPath("$[0].titulo", is("Spring Boot Test 2")))
+		.andExpect(jsonPath("$[0].descricao", is("Test Post Repository 2 - Save Post 2")))
+		.andExpect(jsonPath("$[0].username", is("TESTE 2")))
+		.andExpect(jsonPath("$[0].upvotes", is(2)))
 		
-		.andExpect(jsonPath("$[1].id", is(2)))
-		.andExpect(jsonPath("$[1].titulo", is("Spring Boot Test 2")))
-		.andExpect(jsonPath("$[1].descricao", is("Test Post Repository 2 - Save Post 2")))
-		.andExpect(jsonPath("$[1].upvotes", is(2)));
-
-		verify(repository).findAll(Sort.by(Sort.Direction.DESC, "id"));
+		.andExpect(jsonPath("$[1].id", is(1)))
+		.andExpect(jsonPath("$[1].titulo", is("Spring Boot Test")))
+		.andExpect(jsonPath("$[1].descricao", is("Test Post Repository - Save Post")))
+		.andExpect(jsonPath("$[1].username", is("TESTE")))
+		.andExpect(jsonPath("$[1].upvotes", is(1)));
 	}
 
 	@Test
 	public void  whenSavePostCorrectData_thenReturnStatusCode200 () throws Exception {
-		Post post = new Post(1L, "Spring Boot Test", "Test Post Repository - Save Post Correct", 1);
+		Post post = new Post(1L, "Spring Boot Test", "Test Post Repository - Save Post Correct", "TESTE", 1);
 
 		when(repository.save(post)).thenReturn(post);
 

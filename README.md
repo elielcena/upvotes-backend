@@ -13,8 +13,11 @@ Aplicação onde textos possam ser postados de forma livre e, estes textos, poss
 ### Pré-Requisitos
 
 - [Maven](https://maven.apache.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## 💻 Iniciando
+
+**É necessario configurar (url, usuario e senha) do banco de dados Postgres em /src/main/resources/application.properties**
 
 **Clone o projeto e acesse o diretório /upvotes-frontend e inicie o projeto, conforme o comando abaixo**
 
